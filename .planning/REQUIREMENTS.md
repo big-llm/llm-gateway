@@ -9,8 +9,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Security
 
-- [ ] **SEC-01**: Cache keys are prefixed with tenant_id to prevent cross-tenant data leakage
-- [ ] **SEC-02**: Cache response validates tenant context before returning data
+- [x] **SEC-01**: Cache keys are prefixed with tenant_id to prevent cross-tenant data leakage
+- [x] **SEC-02**: Cache response validates tenant context before returning data
 - [ ] **SEC-03**: Tenant isolation test suite validates no cross-tenant access
 
 ### Reliability
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase                                        | Status  |
 | ----------- | -------------------------------------------- | ------- |
-| SEC-01      | Phase 1: Security & Multi-Tenant Hardening   | Pending |
-| SEC-02      | Phase 1: Security & Multi-Tenant Hardening   | Pending |
+| SEC-01      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
+| SEC-02      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
 | SEC-03      | Phase 1: Security & Multi-Tenant Hardening   | Pending |
 | REL-01      | Phase 2: Reliability & Streaming Enhancement | Pending |
 | REL-02      | Phase 2: Reliability & Streaming Enhancement | Pending |
