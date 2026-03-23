@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 
 - [x] 01-01-PLAN.md — Tenant-isolated cache keys and entry validation
-- [ ] 01-02-PLAN.md — Pipeline integration and cross-tenant isolation tests
+- [x] 01-02-PLAN.md — Pipeline integration and cross-tenant isolation tests
 
 ### Phase 2: Reliability & Streaming Enhancement
 
