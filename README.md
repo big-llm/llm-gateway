@@ -20,14 +20,14 @@ A production-grade bridge service that translates Claude Code CLI requests (Anth
 
 ### Components
 
-| Component | Purpose |
-|-----------|---------|
-| **Routes** (`src/routes/`) | Fastify HTTP endpoints |
-| **Adapters** (`src/adapters/`) | Request/response format conversion |
-| **Providers** (`src/providers/`) | Abstract provider interface |
-| **Streaming** (`src/streaming/`) | SSE stream processing pipeline |
-| **Schemas** (`src/schemas/`) | Zod validation schemas |
-| **Config** (`src/config/`) | Environment-based configuration |
+| Component                        | Purpose                            |
+| -------------------------------- | ---------------------------------- |
+| **Routes** (`src/routes/`)       | Fastify HTTP endpoints             |
+| **Adapters** (`src/adapters/`)   | Request/response format conversion |
+| **Providers** (`src/providers/`) | Abstract provider interface        |
+| **Streaming** (`src/streaming/`) | SSE stream processing pipeline     |
+| **Schemas** (`src/schemas/`)     | Zod validation schemas             |
+| **Config** (`src/config/`)       | Environment-based configuration    |
 
 ### Request Flow
 
@@ -42,36 +42,36 @@ A production-grade bridge service that translates Claude Code CLI requests (Anth
 
 ### Request Mapping
 
-| Anthropic Field | OpenAI Field | Notes |
-|-----------------|---------------|-------|
-| `model` | `model` | Can be mapped via config |
-| `messages` | `messages` | Content blocks converted |
-| `system` | First message with `role: system` | |
-| `max_tokens` | `max_tokens` | |
-| `temperature` | `temperature` | |
-| `top_p` | `top_p` | |
-| `stop_sequences` | `stop` | |
-| `tools` | `tools` | Converted to OpenAI function format |
-| `tool_choice` | `tool_choice` | Mapped appropriately |
+| Anthropic Field  | OpenAI Field                      | Notes                               |
+| ---------------- | --------------------------------- | ----------------------------------- |
+| `model`          | `model`                           | Can be mapped via config            |
+| `messages`       | `messages`                        | Content blocks converted            |
+| `system`         | First message with `role: system` |                                     |
+| `max_tokens`     | `max_tokens`                      |                                     |
+| `temperature`    | `temperature`                     |                                     |
+| `top_p`          | `top_p`                           |                                     |
+| `stop_sequences` | `stop`                            |                                     |
+| `tools`          | `tools`                           | Converted to OpenAI function format |
+| `tool_choice`    | `tool_choice`                     | Mapped appropriately                |
 
 ### Response Mapping
 
-| OpenAI Field | Anthropic Field |
-|--------------|-----------------|
-| `choices[0].message.content` | `content[0].text` |
-| `choices[0].message.tool_calls` | `content[*].tool_use` |
-| `choices[0].finish_reason: stop` | `stop_reason: end_turn` |
-| `choices[0].finish_reason: length` | `stop_reason: max_tokens` |
-| `choices[0].finish_reason: tool_calls` | `stop_reason: tool_use` |
-| `usage.completion_tokens` | `usage.output_tokens` |
+| OpenAI Field                           | Anthropic Field           |
+| -------------------------------------- | ------------------------- |
+| `choices[0].message.content`           | `content[0].text`         |
+| `choices[0].message.tool_calls`        | `content[*].tool_use`     |
+| `choices[0].finish_reason: stop`       | `stop_reason: end_turn`   |
+| `choices[0].finish_reason: length`     | `stop_reason: max_tokens` |
+| `choices[0].finish_reason: tool_calls` | `stop_reason: tool_use`   |
+| `usage.completion_tokens`              | `usage.output_tokens`     |
 
 ### Streaming Event Mapping
 
-| OpenAI Event | Anthropic Event |
-|--------------|-----------------|
-| `choices[0].delta.content` | `content_block_delta` (text_delta) |
-| `choices[0].delta.tool_calls` | `content_block_delta` (input_json_delta) |
-| Chunk with `finish_reason: stop` | `message_delta` + `message_stop` |
+| OpenAI Event                     | Anthropic Event                          |
+| -------------------------------- | ---------------------------------------- |
+| `choices[0].delta.content`       | `content_block_delta` (text_delta)       |
+| `choices[0].delta.tool_calls`    | `content_block_delta` (input_json_delta) |
+| Chunk with `finish_reason: stop` | `message_delta` + `message_stop`         |
 
 ## Installation
 
@@ -144,7 +144,7 @@ curl http://localhost:3000/health
 Expected response:
 
 ```json
-{"status":"ok","timestamp":"..."}
+{ "status": "ok", "timestamp": "..." }
 ```
 
 ## NVIDIA NIM Setup
@@ -184,54 +184,54 @@ export PRIMARY_BASE_URL="http://localhost:8000/v1"
 
 ### Server Configuration
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SERVER_HOST` | `0.0.0.0` | Bind address |
-| `SERVER_PORT` | `3000` | HTTP port |
-| `REQUEST_TIMEOUT` | `60000` | Request timeout (ms) |
-| `LOG_LEVEL` | `info` | Logging level |
-| `LOG_PRETTY` | `false` | Pretty print logs |
+| Variable          | Default   | Description          |
+| ----------------- | --------- | -------------------- |
+| `SERVER_HOST`     | `0.0.0.0` | Bind address         |
+| `SERVER_PORT`     | `3000`    | HTTP port            |
+| `REQUEST_TIMEOUT` | `60000`   | Request timeout (ms) |
+| `LOG_LEVEL`       | `info`    | Logging level        |
+| `LOG_PRETTY`      | `false`   | Pretty print logs    |
 
 ### Rate Limiting
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `RATE_LIMIT_ENABLED` | `true` | Enable rate limiting |
-| `RATE_LIMIT_MAX` | `100` | Max requests per window |
-| `RATE_LIMIT_TIME_WINDOW` | `1 minute` | Time window |
+| Variable                 | Default    | Description             |
+| ------------------------ | ---------- | ----------------------- |
+| `RATE_LIMIT_ENABLED`     | `true`     | Enable rate limiting    |
+| `RATE_LIMIT_MAX`         | `100`      | Max requests per window |
+| `RATE_LIMIT_TIME_WINDOW` | `1 minute` | Time window             |
 
 ### CORS
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CORS_ENABLED` | `true` | Enable CORS |
-| `CORS_ORIGIN` | `*` | Allowed origins |
+| Variable       | Default | Description     |
+| -------------- | ------- | --------------- |
+| `CORS_ENABLED` | `true`  | Enable CORS     |
+| `CORS_ORIGIN`  | `*`     | Allowed origins |
 
 ### Primary Provider
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PRIMARY_API_KEY` | - | API key (required) |
-| `PRIMARY_BASE_URL` | `https://api.openai.com/v1` | Base URL |
-| `PRIMARY_MODEL` | - | Default model |
-| `PRIMARY_TIMEOUT` | `60000` | Request timeout |
-| `PRIMARY_MAX_RETRIES` | `3` | Max retries |
+| Variable              | Default                     | Description        |
+| --------------------- | --------------------------- | ------------------ |
+| `PRIMARY_API_KEY`     | -                           | API key (required) |
+| `PRIMARY_BASE_URL`    | `https://api.openai.com/v1` | Base URL           |
+| `PRIMARY_MODEL`       | -                           | Default model      |
+| `PRIMARY_TIMEOUT`     | `60000`                     | Request timeout    |
+| `PRIMARY_MAX_RETRIES` | `3`                         | Max retries        |
 
 ### Fallback Provider (Optional)
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `FALLBACK_API_KEY` | - | Fallback API key |
-| `FALLBACK_BASE_URL` | - | Fallback base URL |
-| `FALLBACK_MODEL` | - | Fallback model |
-| `FALLBACK_TIMEOUT` | `60000` | Fallback timeout |
+| Variable            | Default | Description       |
+| ------------------- | ------- | ----------------- |
+| `FALLBACK_API_KEY`  | -       | Fallback API key  |
+| `FALLBACK_BASE_URL` | -       | Fallback base URL |
+| `FALLBACK_MODEL`    | -       | Fallback model    |
+| `FALLBACK_TIMEOUT`  | `60000` | Fallback timeout  |
 
 ### Advanced
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ROUTER_STRATEGY` | `failover` | Routing strategy |
-| `CIRCUIT_BREAKER_ENABLED` | `true` | Circuit breaker |
+| Variable                  | Default    | Description      |
+| ------------------------- | ---------- | ---------------- |
+| `ROUTER_STRATEGY`         | `failover` | Routing strategy |
+| `CIRCUIT_BREAKER_ENABLED` | `true`     | Circuit breaker  |
 
 ## Streaming Explanation
 
@@ -269,10 +269,10 @@ data: {}
 
 ### Streaming Endpoints
 
-| Endpoint | Description |
-|----------|-------------|
-| `POST /v1/messages` | Non-streaming request |
-| `POST /v1/messages/stream` | Streaming request |
+| Endpoint                   | Description           |
+| -------------------------- | --------------------- |
+| `POST /v1/messages`        | Non-streaming request |
+| `POST /v1/messages/stream` | Streaming request     |
 
 ### Client Example
 
@@ -284,8 +284,8 @@ const response = await fetch('http://localhost:3000/v1/messages/stream', {
     model: 'claude-3-5-sonnet-20240620',
     messages: [{ role: 'user', content: 'Hello' }],
     max_tokens: 1024,
-    stream: true
-  })
+    stream: true,
+  }),
 });
 
 const reader = response.body.getReader();
@@ -314,23 +314,23 @@ while (true) {
 
 ### Known Limitations
 
-| Limitation | Description |
-|------------|-------------|
-| **Cache Control** | Anthropic cache control is not supported (no equivalent in OpenAI) |
-| **Top K** | Anthropic `top_k` has no OpenAI equivalent |
-| **Stop Sequences** | Limited mapping to OpenAI `stop` parameter |
-| **Refusals** | OpenAI refusals may not map perfectly to Anthropic |
-| **Vision** | Limited vision capabilities depending on provider |
-| **Streaming Tools** | Tool streaming support varies by provider |
+| Limitation          | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| **Cache Control**   | Anthropic cache control is not supported (no equivalent in OpenAI) |
+| **Top K**           | Anthropic `top_k` has no OpenAI equivalent                         |
+| **Stop Sequences**  | Limited mapping to OpenAI `stop` parameter                         |
+| **Refusals**        | OpenAI refusals may not map perfectly to Anthropic                 |
+| **Vision**          | Limited vision capabilities depending on provider                  |
+| **Streaming Tools** | Tool streaming support varies by provider                          |
 
 ### Provider-Specific Notes
 
-| Provider | Streaming | Tools | Vision |
-|----------|-----------|-------|--------|
-| NVIDIA NIM | ✅ | ✅ | ✅ |
-| OpenAI | ✅ | ✅ | ✅ |
-| Ollama | ⚠️ | ❌ | ⚠️ |
-| vLLM | ✅ | ✅ | ✅ |
+| Provider   | Streaming | Tools | Vision |
+| ---------- | --------- | ----- | ------ |
+| NVIDIA NIM | ✅        | ✅    | ✅     |
+| OpenAI     | ✅        | ✅    | ✅     |
+| Ollama     | ⚠️        | ❌    | ⚠️     |
+| vLLM       | ✅        | ✅    | ✅     |
 
 ## Troubleshooting
 
@@ -375,13 +375,13 @@ curl http://localhost:3000/v1/models
 
 ### Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/health` | Health check |
-| GET | `/v1/models` | List models |
-| GET | `/v1/models/:model` | Get model info |
-| POST | `/v1/messages` | Create message |
-| POST | `/v1/messages/stream` | Create streaming message |
+| Method | Path                  | Description              |
+| ------ | --------------------- | ------------------------ |
+| GET    | `/health`             | Health check             |
+| GET    | `/v1/models`          | List models              |
+| GET    | `/v1/models/:model`   | Get model info           |
+| POST   | `/v1/messages`        | Create message           |
+| POST   | `/v1/messages/stream` | Create streaming message |
 
 ### Error Responses
 
