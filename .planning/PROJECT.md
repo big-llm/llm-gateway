@@ -23,6 +23,7 @@ Provide a unified API gateway that abstracts away provider differences and enabl
 - ✓ Admin API with API key management — existing
 - ✓ Request logging and usage tracking — existing
 - ✓ Budget enforcement per org/team — existing
+- ✓ Cache tenant isolation (SEC-01, SEC-02, SEC-03) — Validated in Phase 1
 
 ### Active
 
@@ -49,6 +50,7 @@ Key architectural patterns established:
 - Adapter pattern for format conversion (Anthropic ↔ OpenAI)
 - Multi-tenancy service for org/team/user hierarchy
 - Redis-backed caching and rate limiting
+- Tenant-isolated cache with defense-in-depth (key prefix + entry validation)
 
 ## Constraints
 
@@ -64,6 +66,7 @@ Key architectural patterns established:
 | Redis for caching/rate limiting | Industry standard, well-understood               | — Pending |
 | Multi-provider abstraction      | Enable provider flexibility and fallback         | — Pending |
 | Dual API format support         | Support both OpenAI and Anthropic clients        | — Pending |
+| Tenant-isolated cache keys      | Defense-in-depth: key prefix + entry validation  | Phase 1 ✓ |
 
 ---
 
@@ -88,4 +91,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-23 after initialization_
+_Last updated: 2026-03-23 after Phase 1 completion_
