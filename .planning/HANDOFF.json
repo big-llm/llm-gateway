@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-23T13:54:01.320Z",
+  "phase": "02",
+  "phase_name": "reliability-streaming-enhancement",
+  "phase_dir": ".planning/phases/02-reliability-streaming-enhancement",
+  "plan": 2,
+  "task": 0,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [],
+  "remaining_tasks": [
+    { "id": 1, "name": "Create heartbeat manager module", "status": "not_started" },
+    { "id": 2, "name": "Integrate heartbeat into streamFromProvider", "status": "not_started" },
+    { "id": 3, "name": "Wire heartbeat config from provider settings", "status": "not_started" }
+  ],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {
+      "decision": "Use SSE comment format `: heartbeat` for heartbeats",
+      "rationale": "Standard pattern, invisible to clients (D-05)",
+      "phase": "02"
+    },
+    {
+      "decision": "Default heartbeat interval: 10 seconds",
+      "rationale": "Conservative, safe for any proxy timeout configuration (D-06)",
+      "phase": "02"
+    },
+    {
+      "decision": "Heartbeat sent only when no data received for interval duration",
+      "rationale": "Prevents interference with active streaming (D-07)",
+      "phase": "02"
+    },
+    {
+      "decision": "Full stream restart on reconnect (no resume from last event)",
+      "rationale": "Simpler and more reliable (D-04)",
+      "phase": "02"
+    }
+  ],
+  "uncommitted_files": [
+    ".planning/phases/02-reliability-streaming-enhancement/02-01-PLAN.md",
+    ".planning/phases/02-reliability-streaming-enhancement/02-02-PLAN.md"
+  ],
+  "next_action": "Review 02-02-PLAN.md and execute Task 1: Create heartbeat manager module (src/streaming/heartbeat.ts)",
+  "context_notes": "Phase 2 planning complete. Two plans created: 02-01-PLAN.md (connection recovery) and 02-02-PLAN.md (heartbeat mechanism). Ready to execute 02-02-PLAN first as it's in wave 1. User selected research during planning but task was interrupted before research started. Research may still be beneficial before execution."
+}
