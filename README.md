@@ -1,4 +1,4 @@
-# LLM Gateway — Enterprise AI Proxy
+# AI Bridge Proxy
 
 A production-grade API gateway that provides unified OpenAI-compatible endpoints with enterprise features: multi-tenancy, budget enforcement, Redis-backed rate limiting, and tenant-isolated caching.
 
