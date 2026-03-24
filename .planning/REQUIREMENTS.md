@@ -15,7 +15,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Reliability
 
-- [ ] **REL-01**: SSE stream sends heartbeat every 15 seconds to prevent connection timeout
+- [x] **REL-01**: SSE stream sends heartbeat every 15 seconds to prevent connection timeout
 - [ ] **REL-02**: Infrastructure proxy buffering disabled via X-Accel-Buffering: no header
 - [ ] **REL-03**: SSE heartbeat configurable via environment variable
 - [ ] **REL-04**: Long-running streaming requests (>60s) remain connected
@@ -33,6 +33,14 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CACHE-02**: Similarity threshold configurable (default 0.15)
 - [ ] **CACHE-03**: Cache hit/miss metrics tracked for semantic cache
 - [ ] **CACHE-04**: Semantic cache fallback to exact match when embeddings unavailable
+
+### Universal Bridge Proxy
+
+- [ ] **BRIDGE-01**: Dynamic provider configuration via config file (YAML) and admin API
+- [ ] **BRIDGE-02**: Support for 100+ LLM providers through standardized provider adapters
+- [ ] **BRIDGE-03**: Virtual key system with per-key budgets, spend tracking, and key rotation
+- [ ] **BRIDGE-04**: Sophisticated routing: load balancing, cost-based routing, retry budgets
+- [ ] **BRIDGE-05**: Enhanced observability: cost tracking per key/model, fallback frequency, latency histograms
 
 ## v2 Requirements
 
@@ -80,28 +88,33 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase                                        | Status  |
-| ----------- | -------------------------------------------- | ------- |
+| Requirement | Phase                                        | Status   |
+| ----------- | -------------------------------------------- | -------- |
 | SEC-01      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
 | SEC-02      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
 | SEC-03      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
-| REL-01      | Phase 2: Reliability & Streaming Enhancement | Pending |
-| REL-02      | Phase 2: Reliability & Streaming Enhancement | Pending |
-| REL-03      | Phase 2: Reliability & Streaming Enhancement | Pending |
-| REL-04      | Phase 2: Reliability & Streaming Enhancement | Pending |
-| OBS-01      | Phase 3: Observability & Provider Health     | Pending |
-| OBS-02      | Phase 3: Observability & Provider Health     | Pending |
-| OBS-03      | Phase 3: Observability & Provider Health     | Pending |
-| OBS-04      | Phase 3: Observability & Provider Health     | Pending |
-| CACHE-01    | Phase 4: Smart Caching & Semantic Similarity | Pending |
-| CACHE-02    | Phase 4: Smart Caching & Semantic Similarity | Pending |
-| CACHE-03    | Phase 4: Smart Caching & Semantic Similarity | Pending |
-| CACHE-04    | Phase 4: Smart Caching & Semantic Similarity | Pending |
+| REL-01      | Phase 2: Reliability & Streaming Enhancement | Complete |
+| REL-02      | Phase 2: Reliability & Streaming Enhancement | Pending  |
+| REL-03      | Phase 2: Reliability & Streaming Enhancement | Pending  |
+| REL-04      | Phase 2: Reliability & Streaming Enhancement | Pending  |
+| OBS-01      | Phase 3: Observability & Provider Health     | Pending  |
+| OBS-02      | Phase 3: Observability & Provider Health     | Pending  |
+| OBS-03      | Phase 3: Observability & Provider Health     | Pending  |
+| OBS-04      | Phase 3: Observability & Provider Health     | Pending  |
+| CACHE-01    | Phase 4: Smart Caching & Semantic Similarity | Pending  |
+| CACHE-02    | Phase 4: Smart Caching & Semantic Similarity | Pending  |
+| CACHE-03    | Phase 4: Smart Caching & Semantic Similarity | Pending  |
+| CACHE-04    | Phase 4: Smart Caching & Semantic Similarity | Pending  |
+| BRIDGE-01   | Phase 5: Universal Bridge Proxy              | Pending  |
+| BRIDGE-02   | Phase 5: Universal Bridge Proxy              | Pending  |
+| BRIDGE-03   | Phase 5: Universal Bridge Proxy              | Pending  |
+| BRIDGE-04   | Phase 5: Universal Bridge Proxy              | Pending  |
+| BRIDGE-05   | Phase 5: Universal Bridge Proxy              | Pending  |
 
 **Coverage:**
 
-- v1 requirements: 15 total
-- Mapped to phases: 15
+- v1 requirements: 20 total
+- Mapped to phases: 20
 - Unmapped: 0 ✓
 
 ---
