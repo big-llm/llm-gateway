@@ -1,12 +1,13 @@
 import { z } from 'zod';
 
-const providerConfigSchema = z.object({
+export const providerConfigSchema = z.object({
   type: z.enum(['openai-compatible', 'anthropic', 'openai']).optional(),
   apiKey: z.string().optional(),
   baseUrl: z.string().optional(),
   model: z.string().optional(),
   timeout: z.number().optional(),
   maxRetries: z.number().optional(),
+  heartbeatIntervalMs: z.number().int().positive().optional(),
 });
 
 const modelMappingSchema = z.record(z.string(), z.string());
@@ -67,6 +68,11 @@ export const configSchema = z.object({
     ttl: z.number().default(3600),
     prefix: z.string().default('llm-cache'),
   }),
+  streaming: z
+    .object({
+      heartbeatIntervalMs: z.number().int().positive().default(10000),
+    })
+    .default({ heartbeatIntervalMs: 10000 }),
 });
 
 export type Config = z.infer<typeof configSchema>;
