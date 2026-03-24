@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { providerConfigSchema, configSchema } from '../../../src/config/schema.js';
+import { loadConfig, resetConfig } from '../../../src/config/index.js';
 
 describe('ProviderConfig schema - heartbeatIntervalMs', () => {
   it('should accept heartbeatIntervalMs as optional number', () => {
@@ -132,5 +133,44 @@ describe('Config schema - streaming.heartbeatIntervalMs', () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe('loadConfig - SSE_HEARTBEAT_INTERVAL_MS env var', () => {
+  beforeEach(() => {
+    resetConfig();
+  });
+
+  afterEach(() => {
+    resetConfig();
+  });
+
+  it('should read SSE_HEARTBEAT_INTERVAL_MS from env and parse as number', () => {
+    const env = {
+      SSE_HEARTBEAT_INTERVAL_MS: '15000',
+      PRIMARY_API_KEY: 'test-key',
+    };
+
+    const config = loadConfig(env);
+    expect(config.streaming.heartbeatIntervalMs).toBe(15000);
+  });
+
+  it('should use default value 10000 when SSE_HEARTBEAT_INTERVAL_MS not set', () => {
+    const env = {
+      PRIMARY_API_KEY: 'test-key',
+    };
+
+    const config = loadConfig(env);
+    expect(config.streaming.heartbeatIntervalMs).toBe(10000);
+  });
+
+  it('should use default value when SSE_HEARTBEAT_INTERVAL_MS is empty', () => {
+    const env = {
+      SSE_HEARTBEAT_INTERVAL_MS: '',
+      PRIMARY_API_KEY: 'test-key',
+    };
+
+    const config = loadConfig(env);
+    expect(config.streaming.heartbeatIntervalMs).toBe(10000);
   });
 });
