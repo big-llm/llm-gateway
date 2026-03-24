@@ -9,6 +9,7 @@ export const ProviderSchema = z.object({
   timeoutMs: z.number().default(60000),
   enabled: z.boolean().default(true),
   priority: z.number().default(0),
+  heartbeatIntervalMs: z.number().int().positive().optional(),
 });
 
 export type Provider = z.infer<typeof ProviderSchema>;
@@ -21,6 +22,8 @@ export interface ProviderStatus {
   successCount: number;
   errorCount: number;
   totalCount: number;
+  recentOutcomes: boolean[]; // Rolling window of last 100 request outcomes
+  lastLatencyMs: number; // Latency of most recent successful request
 }
 
 class ProviderRegistry {
@@ -57,6 +60,8 @@ class ProviderRegistry {
         successCount: 0,
         errorCount: 0,
         totalCount: 0,
+        recentOutcomes: [],
+        lastLatencyMs: 0,
       });
     }
   }
@@ -85,6 +90,8 @@ class ProviderRegistry {
       successCount: 0,
       errorCount: 0,
       totalCount: 0,
+      recentOutcomes: [],
+      lastLatencyMs: 0,
     });
     return provider;
   }
@@ -121,13 +128,56 @@ class ProviderRegistry {
     }
   }
 
+  /**
+   * Calculate health status based on rolling window of outcomes and latency.
+   * @param recentOutcomes - Array of booleans (true = success, false = error)
+   * @param lastLatencyMs - Latency of most recent successful request
+   * @returns 'healthy' | 'degraded' | 'unhealthy'
+   */
+  private calculateHealthStatus(
+    recentOutcomes: boolean[],
+    lastLatencyMs: number
+  ): 'healthy' | 'degraded' | 'unhealthy' {
+    // Empty window = no data = unhealthy (safe default)
+    if (recentOutcomes.length === 0) {
+      return 'unhealthy';
+    }
+
+    // Calculate success rate
+    const successCount = recentOutcomes.filter(Boolean).length;
+    const successRate = successCount / recentOutcomes.length;
+
+    // Latency threshold check (D-04): >5000ms triggers degraded regardless of success rate
+    if (lastLatencyMs > 5000) {
+      return 'degraded';
+    }
+
+    // Success rate thresholds (D-03)
+    if (successRate >= 0.95) {
+      return 'healthy';
+    }
+    if (successRate >= 0.8) {
+      return 'degraded';
+    }
+    return 'unhealthy';
+  }
+
   recordSuccess(id: string): void {
     const status = this.providerStatus.get(id);
     if (status) {
+      // Push true to rolling window and cap at 100
+      const recentOutcomes = [...status.recentOutcomes, true].slice(-100);
+
+      // Calculate new health status
+      const newStatus = this.calculateHealthStatus(recentOutcomes, status.lastLatencyMs);
+
       this.providerStatus.set(id, {
         ...status,
         successCount: status.successCount + 1,
         totalCount: status.totalCount + 1,
+        recentOutcomes,
+        status: newStatus,
+        lastCheck: new Date().toISOString(),
       });
     }
   }
@@ -135,10 +185,44 @@ class ProviderRegistry {
   recordError(id: string): void {
     const status = this.providerStatus.get(id);
     if (status) {
+      // Push false to rolling window and cap at 100
+      const recentOutcomes = [...status.recentOutcomes, false].slice(-100);
+
+      // Calculate new health status
+      const newStatus = this.calculateHealthStatus(recentOutcomes, status.lastLatencyMs);
+
       this.providerStatus.set(id, {
         ...status,
         errorCount: status.errorCount + 1,
         totalCount: status.totalCount + 1,
+        recentOutcomes,
+        status: newStatus,
+        lastCheck: new Date().toISOString(),
+      });
+    }
+  }
+
+  /**
+   * Record a successful request with latency for health calculation.
+   * This updates the rolling window and latency threshold tracking.
+   */
+  recordSuccessWithLatency(id: string, latencyMs: number): void {
+    const status = this.providerStatus.get(id);
+    if (status) {
+      // Push true to rolling window and cap at 100
+      const recentOutcomes = [...status.recentOutcomes, true].slice(-100);
+
+      // Calculate new health status with latency
+      const newStatus = this.calculateHealthStatus(recentOutcomes, latencyMs);
+
+      this.providerStatus.set(id, {
+        ...status,
+        successCount: status.successCount + 1,
+        totalCount: status.totalCount + 1,
+        recentOutcomes,
+        lastLatencyMs: latencyMs,
+        status: newStatus,
+        lastCheck: new Date().toISOString(),
       });
     }
   }

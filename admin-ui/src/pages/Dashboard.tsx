@@ -139,7 +139,9 @@ export default function DashboardPage() {
                         </div>
                       )}
                       <div className="text-xs text-muted-foreground">
-                        {provider.successCount}/{provider.totalCount} success
+                        {provider.totalCount > 0
+                          ? `${((provider.successCount / provider.totalCount) * 100).toFixed(0)}% success rate`
+                          : 'No requests yet'}
                       </div>
                     </div>
                   </div>

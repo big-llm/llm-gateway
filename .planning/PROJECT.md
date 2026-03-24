@@ -24,12 +24,12 @@ Provide a unified API gateway that abstracts away provider differences and enabl
 - ✓ Request logging and usage tracking — existing
 - ✓ Budget enforcement per org/team — existing
 - ✓ Cache tenant isolation (SEC-01, SEC-02, SEC-03) — Validated in Phase 1
+- ✓ SSE heartbeat mechanism (REL-01, REL-02, REL-03, REL-04) — Validated in Phase 2
 
 ### Active
 
 - [ ] Add additional LLM providers
 - [ ] Enhance admin UI dashboard
-- [ ] Improve streaming pipeline reliability
 - [ ] Add more detailed analytics/usage metrics
 - [ ] Implement webhook notifications
 - [ ] Add more sophisticated routing rules
@@ -67,6 +67,7 @@ Key architectural patterns established:
 | Multi-provider abstraction      | Enable provider flexibility and fallback         | — Pending |
 | Dual API format support         | Support both OpenAI and Anthropic clients        | — Pending |
 | Tenant-isolated cache keys      | Defense-in-depth: key prefix + entry validation  | Phase 1 ✓ |
+| SSE heartbeat for streaming     | Keep connections alive during long responses     | Phase 2 ✓ |
 
 ---
 
@@ -91,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-03-23 after Phase 1 completion_
+_Last updated: 2026-03-24 after Phase 2 completion_

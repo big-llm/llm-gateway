@@ -91,6 +91,7 @@ async function handleStreamingRequest(
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
     'X-Request-ID': req.id,
+    'X-Accel-Buffering': 'no',
   });
 
   const messageId = `msg_${req.id}`;
@@ -415,6 +416,7 @@ export async function messagesRouter(fastify: FastifyInstance): Promise<void> {
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
         'X-Request-ID': req.id,
+        'X-Accel-Buffering': 'no',
       });
 
       const messageId = `msg_${req.id}`;
