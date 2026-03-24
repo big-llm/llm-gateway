@@ -6,8 +6,9 @@ import {
   convertFromProviderResponse,
   convertOpenAIStreamChunkToAnthropic,
 } from '../adapters/request.js';
-import { getLogger } from '../config/index.js';
+import { getLogger, getConfig } from '../config/index.js';
 import { pricingService, calculateCost } from '../services/pricing.js';
+import { createHeartbeatManager } from '../streaming/heartbeat.js';
 
 export interface PipelineContext {
   requestId: string;
@@ -343,7 +344,11 @@ export async function processStreamingRequest(
 
     await streamFromProvider(
       providerRequest,
-      { apiKey: provider.apiKey, timeout: provider.timeoutMs },
+      {
+        apiKey: provider.apiKey,
+        timeout: provider.timeoutMs,
+        heartbeatIntervalMs: provider.heartbeatIntervalMs,
+      },
       onChunk,
       handleError,
       messageId,
@@ -398,17 +403,32 @@ export async function processStreamingRequest(
 
 async function streamFromProvider(
   request: { url: string; method: string; headers: Record<string, string>; body: unknown },
-  provider: { apiKey: string; timeout: number },
+  provider: { apiKey: string; timeout: number; heartbeatIntervalMs?: number },
   onChunk: (chunk: string) => void,
   onError: (error: Error) => void,
   messageId?: string,
   model?: string
 ): Promise<void> {
   const logger = getLogger();
+  const config = getConfig();
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), provider.timeout);
 
   const msgId = messageId ?? `msg_${Date.now()}`;
+
+  // Get heartbeat interval from provider config or global default
+  const heartbeatMs =
+    provider.heartbeatIntervalMs ?? config.streaming?.heartbeatIntervalMs ?? 10000;
+
+  // Create heartbeat manager
+  const heartbeatManager = createHeartbeatManager({
+    intervalMs: heartbeatMs,
+    onHeartbeat: () => {
+      // Send SSE comment - invisible to client, keeps connection alive
+      const heartbeatChunk = ': heartbeat\n\n';
+      onChunk(heartbeatChunk);
+    },
+  });
 
   try {
     const response = await fetch(request.url, {
@@ -434,6 +454,9 @@ async function streamFromProvider(
       throw new Error('No response body');
     }
 
+    // Start heartbeat after response is received
+    heartbeatManager.start();
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
@@ -442,6 +465,9 @@ async function streamFromProvider(
       if (done) break;
 
       const chunk = decoder.decode(value, { stream: true });
+      // Notify heartbeat manager that data was sent
+      heartbeatManager.notifyDataSent();
+
       const lines = chunk.split('\n');
 
       for (const line of lines) {
@@ -457,8 +483,13 @@ async function streamFromProvider(
         }
       }
     }
+
+    // Stop heartbeat when stream completes
+    heartbeatManager.stop();
   } catch (error) {
     clearTimeout(timeout);
+    // Stop heartbeat on error
+    heartbeatManager.stop();
 
     if (error instanceof Error && error.name === 'AbortError') {
       onError(new Error(`Request timeout after ${provider.timeout}ms`));

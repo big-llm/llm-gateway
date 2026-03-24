@@ -9,6 +9,7 @@ export const ProviderSchema = z.object({
   timeoutMs: z.number().default(60000),
   enabled: z.boolean().default(true),
   priority: z.number().default(0),
+  heartbeatIntervalMs: z.number().int().positive().optional(),
 });
 
 export type Provider = z.infer<typeof ProviderSchema>;
