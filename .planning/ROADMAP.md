@@ -62,8 +62,14 @@ Plans:
 2. Health check endpoint returns status for all configured providers in single API call
 3. Admin dashboard displays provider health status with visual indicators
 4. Health status updates automatically based on configurable success/failure rate thresholds
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 2 plans
+
+Plans:
+
+- [ ] 03-01-PLAN.md — Health calculation with rolling window
+- [ ] 03-02-PLAN.md — Dashboard UI health display
+
+**UI hint**: yes
 
 ### Phase 4: Smart Caching & Semantic Similarity
 
