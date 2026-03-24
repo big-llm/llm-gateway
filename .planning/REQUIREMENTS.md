@@ -16,8 +16,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Reliability
 
 - [x] **REL-01**: SSE stream sends heartbeat every 15 seconds to prevent connection timeout
-- [ ] **REL-02**: Infrastructure proxy buffering disabled via X-Accel-Buffering: no header
-- [ ] **REL-03**: SSE heartbeat configurable via environment variable
+- [x] **REL-02**: Infrastructure proxy buffering disabled via X-Accel-Buffering: no header
+- [x] **REL-03**: SSE heartbeat configurable via environment variable
 - [ ] **REL-04**: Long-running streaming requests (>60s) remain connected
 
 ### Observability
@@ -94,8 +94,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-02      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
 | SEC-03      | Phase 1: Security & Multi-Tenant Hardening   | Complete |
 | REL-01      | Phase 2: Reliability & Streaming Enhancement | Complete |
-| REL-02      | Phase 2: Reliability & Streaming Enhancement | Pending  |
-| REL-03      | Phase 2: Reliability & Streaming Enhancement | Pending  |
+| REL-02      | Phase 2: Reliability & Streaming Enhancement | Complete |
+| REL-03      | Phase 2: Reliability & Streaming Enhancement | Complete |
 | REL-04      | Phase 2: Reliability & Streaming Enhancement | Pending  |
 | OBS-01      | Phase 3: Observability & Provider Health     | Pending  |
 | OBS-02      | Phase 3: Observability & Provider Health     | Pending  |
