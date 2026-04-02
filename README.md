@@ -60,7 +60,7 @@ A production-grade multi-provider LLM gateway with enterprise features: unified 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/llm-gateway.git
+git clone https://github.com/bigllm/llm-gateway.git
 cd llm-gateway
 
 # Create environment file

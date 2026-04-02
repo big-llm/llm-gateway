@@ -8,12 +8,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dk-usa/Bridge-Proxy.git"
+    "url": "https://github.com/bigllm/llm-gateway.git"
   },
   "bugs": {
-    "url": "https://github.com/dk-usa/Bridge-Proxy/issues"
+    "url": "https://github.com/bigllm/llm-gateway/issues"
   },
-  "homepage": "https://github.com/dk-usa/Bridge-Proxy#readme",
+  "homepage": "https://github.com/bigllm/llm-gateway#readme",
   "keywords": [
     "llm",
     "gateway",
