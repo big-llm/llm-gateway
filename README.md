@@ -15,45 +15,29 @@
 
 ---
 
-## ⚡ How It Works
+## ⚡ LLM Gateway
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           LLM GATEWAY                                  │
-│                                                                         │
-│                      ┌─────────────────┐                               │
-│                      │  Single API     │                               │
-│                      │  /v1/chat/      │                               │
-│                      │  completions    │                               │
-│                      └────────┬────────┘                               │
-│                               │                                        │
-│         ┌────────────────────┼────────────────────┐                   │
-│         │                    │                    │                   │
-│         ▼                    ▼                    ▼                   │
-│   ┌──────────┐         ┌──────────┐        ┌──────────┐               │
-│   │  OpenAI  │         │ Anthropic │        │  Azure   │               │
-│   │  GPT-4   │         │ Claude 3  │        │ GPT-4    │               │
-│   └──────────┘         └──────────┘        └──────────┘               │
-│                                                         + 100 more      │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+   ┌──────────────────────────────────────────────────────────────┐
+   │                                                              │
+   │   Your App          LLM Gateway           LLM Providers    │
+   │                                                              │
+   │   ┌────┐        ┌─────────────┐        ┌──────────┐        │
+   │   │curl│───────▶│             │───────▶│  OpenAI  │        │
+   │   └────┘        │   Single    │        │  Claude  │        │
+   │   ┌────┐        │   API       │───────▶│  Azure   │        │
+   │   │py  │───────▶│             │        │  Google  │        │
+   │   └────┘        │ /v1/chat   │───────▶│  Mistral │        │
+   │   ┌────┐        │ completions│        │  Groq    │        │
+   │   │go  │───────▶│             │───────▶│  Ollama  │        │
+   │   └────┘        │             │───────▶│  ...     │        │
+   │   ┌────┐        └─────────────┘        └──────────┘        │
+   │   │js  │                                                      │
+   │   └────┘                                                      │
+   │                                                              │
+   └──────────────────────────────────────────────────────────────┘
 
-**One API endpoint → Connects to 100+ LLM providers**
-
-**Use from any language (Python, Go, Ruby, JavaScript, Java, C#, curl)**
-
-```bash
-# Use OpenAI GPT-4
-curl -X POST http://localhost:3000/v1/chat/completions \
-  -d '{"model": "gpt-4o", "messages": [{"role": "user", "content": "Hi"}]}'
-
-# Use Anthropic Claude - just change the model name
-curl -X POST http://localhost:3000/v1/chat/completions \
-  -d '{"model": "claude-sonnet-4-20250514", "messages": [{"role": "user", "content": "Hi"}]}'
-
-# Use Google Gemini - just change the model name
-curl -X POST http://localhost:3000/v1/chat/completions \
-  -d '{"model": "gemini-1.5-pro", "messages": [{"role": "user", "content": "Hi"}]}'
+   One API endpoint → Access 100+ LLM providers
 ```
 
 ---
