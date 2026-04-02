@@ -8,12 +8,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bigllm/llm-gateway.git"
+    "url": "https://github.com/big-llm/llm-gateway.git"
   },
   "bugs": {
-    "url": "https://github.com/bigllm/llm-gateway/issues"
+    "url": "https://github.com/big-llm/llm-gateway/issues"
   },
-  "homepage": "https://github.com/bigllm/llm-gateway#readme",
+  "homepage": "https://github.com/big-llm/llm-gateway#readme",
   "keywords": [
     "llm",
     "gateway",
