@@ -4,16 +4,16 @@
   "description": "Production-grade multi-provider LLM gateway with enterprise features: multi-tenancy, budget enforcement, rate limiting, caching, and provider health tracking",
   "main": "dist/index.js",
   "type": "module",
-  "author": "Your Name <your.email@example.com>",
+  "author": "Dikshant Gajera <dikshantgajera@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/llm-gateway.git"
+    "url": "https://github.com/dk-usa/Bridge-Proxy.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/llm-gateway/issues"
+    "url": "https://github.com/dk-usa/Bridge-Proxy/issues"
   },
-  "homepage": "https://github.com/your-username/llm-gateway#readme",
+  "homepage": "https://github.com/dk-usa/Bridge-Proxy#readme",
   "keywords": [
     "llm",
     "gateway",
