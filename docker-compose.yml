@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  llm-gateway:
+    build: .
+    container_name: llm-gateway
+    ports:
+      - '3000:3000'
+    environment:
+      - SERVER_PORT=3000
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-your-admin-token}
+      - PRIMARY_API_KEY=${PRIMARY_API_KEY}
+      - PRIMARY_BASE_URL=${PRIMARY_BASE_URL:-https://api.openai.com/v1}
+      - PRIMARY_MODELS=${PRIMARY_MODELS:-gpt-4o}
+      - REDIS_URL=redis://redis:6379
+      - REDIS_ENABLED=true
+    depends_on:
+      - redis
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: llm-gateway-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  admin-ui:
+    build:
+      context: ./admin-ui
+      dockerfile: Dockerfile
+    container_name: llm-gateway-admin
+    ports:
+      - '5173:80'
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - llm-gateway
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+
+networks:
+  default:
+    name: llm-gateway-network

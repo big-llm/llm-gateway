@@ -1,9 +1,33 @@
 {
-  "name": "anthropic-openai-bridge",
+  "name": "llm-gateway",
   "version": "1.0.0",
-  "description": "Bridge service to translate Anthropic Messages API to OpenAI-compatible APIs",
+  "description": "Production-grade multi-provider LLM gateway with enterprise features: multi-tenancy, budget enforcement, rate limiting, caching, and provider health tracking",
   "main": "dist/index.js",
   "type": "module",
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/llm-gateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/llm-gateway/issues"
+  },
+  "homepage": "https://github.com/your-username/llm-gateway#readme",
+  "keywords": [
+    "llm",
+    "gateway",
+    "openai",
+    "anthropic",
+    "api-gateway",
+    "multi-tenant",
+    "rate-limiting",
+    "caching",
+    "proxy",
+    "ai",
+    "machine-learning",
+    "language-model"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },
