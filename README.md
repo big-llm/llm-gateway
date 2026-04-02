@@ -2,241 +2,58 @@
 
 # 🚀 LLM Gateway
 
-### Production-Grade Multi-Provider LLM Gateway
+### One Gateway. Any Provider. Any Client.
 
 [![Version](https://img.shields.io/github/v/release/big-llm/llm-gateway?include_prereleases&style=flat-square)](https://github.com/big-llm/llm-gateway/releases)
 [![License](https://img.shields.io/github/license/big-llm/llm-gateway?style=flat-square)](LICENSE)
-[![Node.js](https://img.shields.io/node/v/llm-gateway?style=flat-square)](package.json)
 [![Docker](https://img.shields.io/docker/pulls/bigllm/llm-gateway?style=flat-square)](https://hub.docker.com/r/bigllm/llm-gateway)
 [![Stars](https://img.shields.io/github/stars/big-llm/llm-gateway?style=flat-square)](https://github.com/big-llm/llm-gateway/stargazers)
 
-**English** | [中文](./README-ZH.md) | [Español](./README-ES.md)
-
-A unified API gateway that abstracts away provider differences and enables enterprise features across multiple LLM providers.
+**Unified API gateway for 100+ LLM providers → consumed by any client in any language**
 
 </div>
 
 ---
 
-## ⭐ Why LLM Gateway?
+## ⚡ One Gateway to Rule Them All
 
-- **🔄 Unified API** — One endpoint for OpenAI, Anthropic, Azure, Google, and 100+ more
-- **🏢 Multi-Tenant Isolation** — Secure tenant-scoped access with defense-in-depth
-- **💰 Budget Enforcement** — Per-key spend limits prevent cost overruns
-- **⚡ Rate Limiting** — Redis-backed sliding window rate limits
-- **🔁 Automatic Failover** — Seamless fallback when providers fail
-- **📊 Provider Health** — Real-time health monitoring dashboard
-- **💾 Smart Caching** — Semantic similarity caching reduces costs
-- **🌊 Streaming Support** — SSE heartbeat keeps long responses connected
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        YOUR APPLICATION (Any Language)                  │
+│   Python • Go • Ruby • JavaScript • Java • C# • curl                   │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │ ←── Send requests in OpenAI format
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           LLM GATEWAY                                   │
+│                                                                          │
+│   ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐       │
+│   │   OpenAI   │  │ Anthropic  │  │   Azure    │  │  Google    │  ...   │
+│   │   GPT-4    │  │ Claude 3   │  │ GPT-4 Azure│  │  Gemini    │       │
+│   └────────────┘  └────────────┘  └────────────┘  └────────────┘       │
+│                                                                          │
+│   ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐       │
+│   │  Cohere    │  │  Mistral   │  │   Groq     │  │  Ollama    │       │
+│   └────────────┘  └────────────┘  └────────────┘  └────────────┘       │
+│                                                                          │
+│   + 100+ more OpenAI-compatible providers                               │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │ ←── Get responses back
+                                 ▼
+```
 
 ---
 
-## 🏁 Quick Start
+## 📦 Use It Your Way — Install Anywhere
 
-### Docker (Recommended)
+### 🐳 Docker (Easiest)
 
 ```bash
-# Clone and start
-git clone https://github.com/big-llm/llm-gateway.git
-cd llm-gateway
-cp .env.example .env
-
-# Configure your API keys in .env, then:
-docker-compose up -d
-
-# Access at:
-# API:    http://localhost:3000
-# Admin:  http://localhost:5173
+# Quick start
+docker run -d -p 3000:3000 -e PRIMARY_API_KEY=sk-xxx bigllm/llm-gateway
 ```
 
-### npm
-
-```bash
-# Install
-npm install
-
-# Configure
-cp .env.example .env
-# Edit .env with your API keys
-
-# Run
-npm run dev
-```
-
----
-
-## 📖 Documentation
-
-| Section                          | Description                  |
-| -------------------------------- | ---------------------------- |
-| [API Reference](#-api-endpoints) | All available endpoints      |
-| [Configuration](#-configuration) | Environment variables        |
-| [Architecture](#-architecture)   | System design & flow         |
-| [SDKs](#-sdks--client-libraries) | Python, Go, Ruby, JS clients |
-| [Deployment](#-deployment)       | Docker & production          |
-| [Contributing](CONTRIBUTING.md)  | Development guide            |
-
----
-
-## 🔌 API Endpoints
-
-### OpenAI-Compatible
-
-```bash
-# Chat Completions
-POST /v1/chat/completions
-
-# List Models
-GET /v1/models
-
-# Embeddings
-POST /v1/embeddings
-```
-
-### Anthropic-Compatible
-
-```bash
-# Messages API
-POST /v1/messages
-POST /v1/messages/stream
-```
-
-### Admin API
-
-```bash
-# Health & Monitoring
-GET  /admin/health
-GET  /admin/health/providers
-
-# API Keys Management
-GET    /admin/keys
-POST   /admin/keys
-GET    /admin/keys/:id
-PUT    /admin/keys/:id
-DELETE /admin/keys/:id
-
-# Organizations & Teams
-GET  /admin/orgs
-POST /admin/orgs
-GET  /admin/teams
-POST /admin/teams
-
-# Analytics
-GET  /admin/logs
-GET  /admin/stats
-```
-
----
-
-## 🌍 Supported Providers
-
-| Provider                      | Type                | Quick Config  |
-| ----------------------------- | ------------------- | ------------- |
-| OpenAI                        | `openai-compatible` | `PRIMARY_*`   |
-| Anthropic                     | `anthropic`         | `ANTHROPIC_*` |
-| Azure OpenAI                  | `azure`             | `AZURE_*`     |
-| Google AI                     | `google`            | `GOOGLE_*`    |
-| Cohere                        | `cohere`            | `COHERE_*`    |
-| Mistral                       | `mistral`           | `MISTRAL_*`   |
-| Groq / Fireworks / Perplexity | `openai-compatible` | Custom prefix |
-| Ollama / LM Studio / vLLM     | `openai-compatible` | Custom prefix |
-
-> **Any OpenAI-compatible API** works out of the box.
-
----
-
-## ⚙️ Configuration
-
-```bash
-# Server Settings
-SERVER_PORT=3000
-ADMIN_TOKEN=your-secure-admin-token
-
-# Primary Provider (OpenAI example)
-PRIMARY_TYPE=openai-compatible
-PRIMARY_API_KEY=sk-your-key
-PRIMARY_BASE_URL=https://api.openai.com/v1
-PRIMARY_MODELS=gpt-4o,gpt-4o-mini,gpt-3.5-turbo
-PRIMARY_ENABLED=true
-PRIMARY_PRIORITY=10
-
-# Fallback Provider (Anthropic example)
-FALLBACK_TYPE=anthropic
-FALLBACK_API_KEY=sk-ant-your-key
-FALLBACK_PRIORITY=20
-
-# Redis (enables caching & rate limiting)
-REDIS_URL=redis://localhost:6379
-REDIS_ENABLED=true
-
-# Streaming Heartbeat (keep connections alive)
-SSE_HEARTBEAT_INTERVAL_MS=15000
-
-# Semantic Cache (reduce costs)
-SEMANTIC_CACHE_ENABLED=false
-SEMANTIC_CACHE_SIMILARITY_THRESHOLD=0.15
-```
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Your Application                          │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │ OpenAI / Anthropic API
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                         LLM Gateway                              │
-│                                                                  │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐     │
-│  │  Tenant  │──▶│  Budget  │──▶│  Rate    │──▶│  Cache   │     │
-│  │   Auth   │   │   Check  │   │  Limit   │   │ (Redis)  │     │
-│  └──────────┘   └──────────┘   └──────────┘   └──────────┘     │
-│        │                                                      │
-│        ▼                                                      │
-│  ┌─────────────────────────────────────┐                       │
-│  │       Provider Router               │                       │
-│  │   (Primary + Fallback + Failover)  │                       │
-│  └──────────────────┬──────────────────┘                       │
-│                     │                                          │
-│        ┌────────────┼────────────┐                             │
-│        ▼            ▼            ▼                             │
-│    ┌───────┐   ┌─────────┐   ┌───────┐                         │
-│    │OpenAI │   │Anthropic│   │ Azure │   ...100+ providers     │
-│    └───────┘   └─────────┘   └───────┘                         │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Request Flow
-
-1. **🔐 Tenant Auth** — Validate API key, extract org/team context
-2. **💰 Budget Check** — Verify key hasn't exceeded spend limit
-3. **🚦 Rate Limit** — Check Redis-backed rate limit counter
-4. **💾 Cache Lookup** — Exact match → Semantic similarity
-5. **🌐 Provider Route** — Primary → Fallback on error
-6. **📝 Log & Track** — Record request, update counters, collect metrics
-
----
-
-## 📊 Admin Dashboard
-
-Built-in React dashboard at `/admin`:
-
-- 🔑 **API Keys** — Create, rotate, manage with spend limits
-- 🏢 **Organizations** — Multi-tenant hierarchy
-- 👥 **Teams** — Team-scoped resources
-- 🤖 **Models** — Provider model mappings
-- 📜 **Logs** — Real-time request streaming
-- 📈 **Stats** — Usage metrics per key/org
-- ❤️ **Health** — Provider status dashboard
-
----
-
-## 💻 SDKs & Client Libraries
-
-### Python (pip)
+### 🐍 Python
 
 ```bash
 pip install llm-gateway
@@ -244,53 +61,33 @@ pip install llm-gateway
 
 ```python
 from llm_gateway import LLMGateway
-
-gateway = LLMGateway(
-    base_url="http://localhost:3000",
-    api_key="your-api-key"
-)
-response = gateway.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello!"}]
-)
-print(response['choices'][0]['message']['content'])
+gateway = LLMGateway(base_url="http://localhost:3000", api_key="sk-xxx")
+response = gateway.chat.completions.create(model="gpt-4o", messages=[{"role":"user","content":"Hi"}])
 ```
 
-[Python SDK →](python/README.md)
-
-### Go
+### 🟢 Go
 
 ```bash
 go get github.com/big-llm/llm-gateway/go
 ```
 
 ```go
-import "github.com/big-llm/llm-gateway/go"
-
-gateway := llmgateway.New(
-    llmgateway.WithBaseURL("http://localhost:3000"),
-    llmgateway.WithAPIKey("your-api-key"),
-)
+gateway := llmgateway.New(llmgateway.WithAPIKey("sk-xxx"))
 resp, _ := gateway.Chat.Completions.Create(ctx, &req)
 ```
 
-[Go SDK →](go/README.md)
-
-### Ruby (gem)
+### 💎 Ruby
 
 ```bash
 gem install llm-gateway
 ```
 
 ```ruby
-require 'llm_gateway'
-gateway = LLMGateway.new(base_url: 'http://localhost:3000', api_key: 'your-key')
-response = gateway.chat.completions.create(model: 'gpt-4o', messages: [{role: 'user', content: 'Hello!'}])
+gateway = LLMGateway.new(base_url: 'http://localhost:3000', api_key: 'sk-xxx')
+response = gateway.chat.completions.create(model: 'gpt-4o', messages: [{role: 'user', content: 'Hi'}])
 ```
 
-[Ruby SDK →](ruby/README.md)
-
-### npm / JavaScript
+### 📦 npm / JavaScript
 
 ```bash
 npm install llm-gateway
@@ -298,47 +95,218 @@ npm install llm-gateway
 
 ```javascript
 import { LLMGateway } from 'llm-gateway';
-
-const gateway = new LLMGateway({
-  baseUrl: 'http://localhost:3000',
-  apiKey: 'your-api-key',
-});
-
+const gateway = new LLMGateway({ baseUrl: 'http://localhost:3000', apiKey: 'sk-xxx' });
 const response = await gateway.chat.completions.create({
   model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello!' }],
+  messages: [{ role: 'user', content: 'Hi' }],
 });
 ```
+
+### ☕ Java
+
+```java
+// Maven: com.llm-gateway:java-client:1.0.0
+LLMGateway gateway = new LLMGateway("http://localhost:3000", "sk-xxx");
+CompletionsResponse response = gateway.chat().createCompletions(request);
+```
+
+### 🍎 C# / .NET
+
+```bash
+dotnet add package LLMGateway
+```
+
+```csharp
+var gateway = new LLMGatewayClient("http://localhost:3000", "sk-xxx");
+var response = await gateway.Chat.CreateAsync(request);
+```
+
+### ⬡ curl (No SDK needed)
+
+```bash
+curl -X POST http://localhost:3000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-xxx" \
+  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hi"}]}'
+```
+
+---
+
+## 🌍 Connect to ANY Provider
+
+| Provider         | Config Example                      | Models               |
+| ---------------- | ----------------------------------- | -------------------- |
+| **OpenAI**       | `PRIMARY_TYPE=openai-compatible`    | GPT-4, GPT-3.5       |
+| **Anthropic**    | `ANTHROPIC_TYPE=anthropic`          | Claude 3.5, Claude 3 |
+| **Azure OpenAI** | `AZURE_TYPE=azure`                  | GPT-4, GPT-3.5 Azure |
+| **Google AI**    | `GOOGLE_TYPE=google`                | Gemini Pro, Flash    |
+| **Cohere**       | `COHERE_TYPE=cohere`                | Command R, Embed     |
+| **Mistral**      | `MISTRAL_TYPE=mistral`              | Mistral Large, Small |
+| **Groq**         | `GROQ_TYPE=openai-compatible`       | Mixtral, Llama       |
+| **Ollama**       | `OLLAMA_TYPE=openai-compatible`     | Llama 3, Mistral     |
+| **Fireworks**    | `FIREWORKS_TYPE=openai-compatible`  | Llama 3, Mixtral     |
+| **Perplexity**   | `PERPLEXITY_TYPE=openai-compatible` | Sonar, Llama         |
+| **Anyscale**     | `ANYSCALE_TYPE=openai-compatible`   | Mixtral, Llama 2     |
+| **Together AI**  | `TOGETHER_TYPE=openai-compatible`   | Llama 3, Mistral     |
+| **LM Studio**    | `LMSTUDIO_TYPE=openai-compatible`   | Local models         |
+| **vLLM**         | `VLLM_TYPE=openai-compatible`       | Any vLLM model       |
+
+**+ 100+ more OpenAI-compatible APIs**
+
+---
+
+## 🏁 Quick Start
+
+```bash
+# 1. Clone
+git clone https://github.com/big-llm/llm-gateway.git
+cd llm-gateway
+
+# 2. Configure
+cp .env.example .env
+# Edit .env with your provider API keys
+
+# 3. Run (Docker)
+docker-compose up -d
+
+# OR (npm)
+npm install && npm run dev
+
+# 4. Use!
+curl -X POST http://localhost:3000/v1/chat/completions \
+  -H "Authorization: Bearer sk-your-key" \
+  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hello!"}]}'
+```
+
+**Access:** API `http://localhost:3000` | Admin UI `http://localhost:5173`
+
+---
+
+## ✨ Key Features
+
+| Feature                 | Description                                                  |
+| ----------------------- | ------------------------------------------------------------ |
+| 🔄 **100+ Providers**   | OpenAI, Anthropic, Azure, Google, Cohere, Mistral, Ollama... |
+| 🏢 **Multi-Tenant**     | Org/Team/User isolation with API keys                        |
+| 💰 **Budget Control**   | Per-key spend limits prevent cost overruns                   |
+| 🚦 **Rate Limiting**    | Redis-backed sliding window limits                           |
+| 🔁 **Auto Failover**    | Automatic fallback when providers fail                       |
+| 📊 **Health Dashboard** | Real-time provider status monitoring                         |
+| 💾 **Smart Caching**    | Exact + semantic similarity caching                          |
+| 🌊 **Streaming**        | SSE heartbeat keeps long responses connected                 |
+| 🔐 **Tenant Isolation** | Defense-in-depth cache security                              |
+
+---
+
+## 🔌 API Endpoints (OpenAI-Compatible)
+
+### Chat Completions
+
+```bash
+POST /v1/chat/completions
+```
+
+### Embeddings
+
+```bash
+POST /v1/embeddings
+```
+
+### Models
+
+```bash
+GET /v1/models
+```
+
+### Admin
+
+```bash
+GET  /admin/health
+GET  /admin/keys
+POST /admin/keys
+GET  /admin/orgs
+GET  /admin/stats
+```
+
+---
+
+## ⚙️ Configuration
+
+```bash
+# Server
+SERVER_PORT=3000
+ADMIN_TOKEN=your-admin-token
+
+# Provider 1 (Primary)
+PRIMARY_TYPE=openai-compatible
+PRIMARY_API_KEY=sk-openai-xxx
+PRIMARY_BASE_URL=https://api.openai.com/v1
+PRIMARY_MODELS=gpt-4o,gpt-4o-mini
+
+# Provider 2 (Fallback)
+FALLBACK_TYPE=anthropic
+FALLBACK_API_KEY=sk-ant-anthropic-xxx
+
+# Redis (enables caching + rate limiting)
+REDIS_URL=redis://localhost:6379
+REDIS_ENABLED=true
+```
+
+---
+
+## 🏗️ Architecture
+
+```
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│   Auth       │───▶│   Budget     │───▶│   Rate       │───▶│   Cache      │
+│   Check      │    │   Check      │    │   Limit      │    │   (Redis)    │
+└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
+                                                                    │
+                                                                    ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                          Provider Router                              │
+│                   Primary → Fallback → Retry                         │
+└────────────────────────────┬─────────────────────────────────────────┘
+                             │
+    ┌────────┬────────┬────────┬────────┬────────┬────────┬────────┐
+    ▼        ▼        ▼        ▼        ▼        ▼        ▼        ▼
+  OpenAI  Anthropic  Azure   Google  Cohere  Mistral  Ollama  +100+
+```
+
+---
+
+## 📊 Admin Dashboard
+
+Access at `/admin`:
+
+- 🔑 **API Keys** — Create, manage, rotate keys
+- 🏢 **Organizations** — Multi-tenant management
+- 👥 **Teams** — Team permissions
+- 📈 **Stats** — Usage analytics
+- ❤️ **Health** — Provider status
 
 ---
 
 ## 🐳 Deployment
 
-### Docker Compose (Recommended)
+### Docker Compose
 
 ```bash
-# Start all services
 docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop
-docker-compose down
 ```
 
-### Docker Standalone
+### Standalone Docker
 
 ```bash
-# Build
 docker build -t llm-gateway .
+docker run -d -p 3000:3000 -e PRIMARY_API_KEY=sk-xxx llm-gateway
+```
 
-# Run
-docker run -d \
-  -p 3000:3000 \
-  -e PRIMARY_API_KEY=sk-your-key \
-  -e ADMIN_TOKEN=your-admin-token \
-  llm-gateway
+### Kubernetes
+
+```yaml
+# See examples/k8s/ for Helm charts
+helm install llm-gateway ./charts/llm-gateway
 ```
 
 ---
@@ -346,35 +314,22 @@ docker run -d \
 ## 🛠️ Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Development with hot reload
 npm run dev          # Gateway
 npm run dev:admin    # Admin UI
-
-# Run tests
-npm test
-npm run test:coverage
-
-# Code quality
-npm run lint
-npm run typecheck
-
-# Build
-npm run build
-npm run build:admin
+npm test             # Run tests
+npm run build        # Build
 ```
 
 ---
 
 ## 🔧 Tech Stack
 
-| Component | Technology              |
+| Layer     | Technology              |
 | --------- | ----------------------- |
 | Runtime   | Node.js 20+             |
 | Framework | Fastify                 |
-| Database  | SQLite + Drizzle ORM    |
+| Database  | SQLite + Drizzle        |
 | Cache     | Redis                   |
 | Admin UI  | React + Vite + Tailwind |
 | Testing   | Vitest                  |
@@ -384,48 +339,25 @@ npm run build:admin
 
 ## 🗺️ Roadmap
 
-### v1.0 (Current)
-
-- ✅ Multi-provider support (100+)
-- ✅ Multi-tenant isolation
-- ✅ Budget enforcement
-- ✅ Rate limiting
-- ✅ Provider health tracking
-- ✅ Semantic caching
-- ✅ SSE heartbeat
-- ✅ Admin dashboard
-
-### v1.1 (Next)
-
-- [ ] Advanced routing (load balancing, cost-based)
-- [ ] Circuit breaker per provider
-- [ ] Webhook notifications
-- [ ] Enhanced analytics
+- ✅ v1.0 — Multi-provider, multi-tenant, caching, health tracking
+- 🔄 v1.1 — Advanced routing, circuit breaker, webhooks
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) — PRs welcome!
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-## 🙏 Acknowledgments
-
-Inspired by [LiteLLM](https://github.com/BerriAI/litellm) — the best open-source LLM gateway.
+MIT — see [LICENSE](LICENSE)
 
 ---
 
 <div align="center">
 
-**⭐ Star us on GitHub if this helped!**
-
-Built with ❤️ by [Dikshant Gajera](https://github.com/dikshantgajera)
+**⭐ Star us if this helped!** | Built with ❤️ by [Dikshant Gajera](https://github.com/dikshantgajera)
 
 </div>
