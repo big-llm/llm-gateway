@@ -1,0 +1,40 @@
+{
+  "name": "llm-gateway",
+  "version": "1.0.0",
+  "description": "Python SDK for LLM Gateway - multi-provider LLM gateway",
+  "author": "Dikshant Gajera <dikshantgajera@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/big-llm/llm-gateway",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/big-llm/llm-gateway"
+  },
+  "keywords": [
+    "llm",
+    "gateway",
+    "openai",
+    "anthropic",
+    "api",
+    "client"
+  ],
+  "requires_python": ">=3.8",
+  "dependencies": {
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0"
+  },
+  "dev_dependencies": {
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0"
+  },
+  "classifiers": [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+  ]
+}

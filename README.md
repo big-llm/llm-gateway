@@ -354,6 +354,89 @@ curl -H "Authorization: Bearer $ADMIN_TOKEN" \
 }
 ```
 
+## SDKs & Client Libraries
+
+Install LLM Gateway client libraries in your preferred language:
+
+### Python (pip)
+
+```bash
+pip install llm-gateway
+```
+
+```python
+from llm_gateway import LLMGateway
+
+gateway = LLMGateway(
+    base_url="http://localhost:3000",
+    api_key="your-api-key"
+)
+response = gateway.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+```
+
+[Learn more →](python/README.md)
+
+### Go
+
+```bash
+go get github.com/big-llm/llm-gateway/go
+```
+
+```go
+import "github.com/big-llm/llm-gateway/go"
+
+gateway := llmgateway.New(
+    llmgateway.WithBaseURL("http://localhost:3000"),
+    llmgateway.WithAPIKey("your-api-key"),
+)
+```
+
+[Learn more →](go/README.md)
+
+### Ruby (gem)
+
+```ruby
+gem install llm-gateway
+```
+
+```ruby
+require 'llm_gateway'
+
+gateway = LLMGateway.new(
+  base_url: 'http://localhost:3000',
+  api_key: 'your-api-key'
+)
+response = gateway.chat.completions.create(
+  model: 'gpt-4o',
+  messages: [{ role: 'user', content: 'Hello!' }]
+)
+```
+
+[Learn more →](ruby/README.md)
+
+### npm / JavaScript
+
+```bash
+npm install llm-gateway
+```
+
+```javascript
+import { LLMGateway } from 'llm-gateway';
+
+const gateway = new LLMGateway({
+  baseUrl: 'http://localhost:3000',
+  apiKey: 'your-api-key',
+});
+
+const response = await gateway.chat.completions.create({
+  model: 'gpt-4o',
+  messages: [{ role: 'user', content: 'Hello!' }],
+});
+```
+
 ## Tech Stack
 
 - **Runtime:** Node.js 20+
