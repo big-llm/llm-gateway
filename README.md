@@ -1,108 +1,89 @@
-# LLM Gateway
+<div align="center">
 
-A production-grade multi-provider LLM gateway with enterprise features: unified OpenAI/Anthropic-compatible endpoints, multi-tenancy, budget enforcement, Redis-backed rate limiting, tenant-isolated caching, provider health tracking, and semantic caching.
+# 🚀 LLM Gateway
 
-**Perfect for teams who want:**
+### Production-Grade Multi-Provider LLM Gateway
 
-- Single API endpoint for multiple LLM providers (OpenAI, Anthropic, Azure, Google, etc.)
-- Multi-tenant isolation and per-key budget enforcement
-- Production-ready reliability with automatic failover and health monitoring
-- Cost optimization through semantic caching
+[![Version](https://img.shields.io/github/v/release/big-llm/llm-gateway?include_prereleases&style=flat-square)](https://github.com/big-llm/llm-gateway/releases)
+[![License](https://img.shields.io/github/license/big-llm/llm-gateway?style=flat-square)](LICENSE)
+[![Node.js](https://img.shields.io/node/v/llm-gateway?style=flat-square)](package.json)
+[![Docker](https://img.shields.io/docker/pulls/bigllm/llm-gateway?style=flat-square)](https://hub.docker.com/r/bigllm/llm-gateway)
+[![Stars](https://img.shields.io/github/stars/big-llm/llm-gateway?style=flat-square)](https://github.com/big-llm/llm-gateway/stargazers)
 
-## What It Does
+**English** | [中文](./README-ZH.md) | [Español](./README-ES.md)
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Your Application                            │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │ OpenAI / Anthropic API
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      LLM Gateway                                │
-│                                                                 │
-│  ┌─────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐      │
-│  │ Tenant  │──▶│ Budget   │──▶│ Rate     │──▶│ Cache    │      │
-│  │ Auth    │   │ Check    │   │ Limit    │   │ (Redis)  │      │
-│  └─────────┘   └──────────┘   └──────────┘   └──────────┘      │
-│                                                                 │
-│                 ┌──────────────────────┐                        │
-│      ┌─────────▶│ Provider Router      │                        │
-│      │          │ (Primary / Fallback) │                        │
-│      │          └──────────┬───────────┘                        │
-│      │                     │                                    │
-│      │          ┌──────────▼───────────┐                        │
-│      │          │ Provider Pool        │                        │
-│      │          │ OpenAI │ Anthropic   │                        │
-│      │          │ Azure  │ Google      │                        │
-│      │          │ Cohere │ Mistral     │                        │
-│      └──────────└──────────────────────┘                        │
-└─────────────────────────────────────────────────────────────────┘
-```
+A unified API gateway that abstracts away provider differences and enables enterprise features across multiple LLM providers.
 
-## Key Features
+</div>
 
-| Feature                      | Description                                                                        |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| **Multi-Provider Support**   | OpenAI, Anthropic, Azure, Google, Cohere, Mistral, and 100+ OpenAI-compatible APIs |
-| **Multi-Tenant Auth**        | API key validation per org/team/user with tenant isolation                         |
-| **Budget Enforcement**       | Per-key spend limits with automatic blocking                                       |
-| **Rate Limiting**            | Redis-backed sliding window rate limits                                            |
-| **Tenant-Isolated Cache**    | Cache keys prefixed with tenant context, defense-in-depth validation               |
-| **Provider Health Tracking** | Rolling window health monitoring with status dashboard                             |
-| **Semantic Cache**           | Reduce costs with embedding-based cache similarity matching                        |
-| **SSE Heartbeat**            | Keep streaming connections alive during long responses                             |
-| **Provider Failover**        | Automatic fallback on primary provider failure                                     |
-| **Admin Dashboard**          | React web UI for managing keys, orgs, teams, logs, and health                      |
+---
 
-## Quick Start
+## ⭐ Why LLM Gateway?
 
-### Using Docker (Recommended)
+- **🔄 Unified API** — One endpoint for OpenAI, Anthropic, Azure, Google, and 100+ more
+- **🏢 Multi-Tenant Isolation** — Secure tenant-scoped access with defense-in-depth
+- **💰 Budget Enforcement** — Per-key spend limits prevent cost overruns
+- **⚡ Rate Limiting** — Redis-backed sliding window rate limits
+- **🔁 Automatic Failover** — Seamless fallback when providers fail
+- **📊 Provider Health** — Real-time health monitoring dashboard
+- **💾 Smart Caching** — Semantic similarity caching reduces costs
+- **🌊 Streaming Support** — SSE heartbeat keeps long responses connected
+
+---
+
+## 🏁 Quick Start
+
+### Docker (Recommended)
 
 ```bash
-# Clone the repository
+# Clone and start
 git clone https://github.com/big-llm/llm-gateway.git
 cd llm-gateway
-
-# Create environment file
 cp .env.example .env
 
-# Edit .env and add your API keys
-nano .env
-
-# Start with Docker Compose
+# Configure your API keys in .env, then:
 docker-compose up -d
 
-# Gateway will be available at:
-# - API: http://localhost:3000
-# - Admin UI: http://localhost:5173
+# Access at:
+# API:    http://localhost:3000
+# Admin:  http://localhost:5173
 ```
 
-### Using npm
+### npm
 
 ```bash
-# Install dependencies
+# Install
 npm install
 
-# Create environment file
+# Configure
 cp .env.example .env
-
 # Edit .env with your API keys
-nano .env
 
-# Development mode with hot reload
+# Run
 npm run dev
-
-# Or build and run in production
-npm run build
-npm start
 ```
 
-## API Endpoints
+---
+
+## 📖 Documentation
+
+| Section                          | Description                  |
+| -------------------------------- | ---------------------------- |
+| [API Reference](#-api-endpoints) | All available endpoints      |
+| [Configuration](#-configuration) | Environment variables        |
+| [Architecture](#-architecture)   | System design & flow         |
+| [SDKs](#-sdks--client-libraries) | Python, Go, Ruby, JS clients |
+| [Deployment](#-deployment)       | Docker & production          |
+| [Contributing](CONTRIBUTING.md)  | Development guide            |
+
+---
+
+## 🔌 API Endpoints
 
 ### OpenAI-Compatible
 
 ```bash
-# Chat Completions (streaming and non-streaming)
+# Chat Completions
 POST /v1/chat/completions
 
 # List Models
@@ -115,63 +96,63 @@ POST /v1/embeddings
 ### Anthropic-Compatible
 
 ```bash
-# Messages API (streaming and non-streaming)
+# Messages API
 POST /v1/messages
+POST /v1/messages/stream
 ```
 
 ### Admin API
 
 ```bash
-GET  /admin/health              # Health check
-GET  /admin/health/providers    # Provider health status
+# Health & Monitoring
+GET  /admin/health
+GET  /admin/health/providers
 
-# API Keys
-GET  /admin/keys                # List all keys
-POST /admin/keys                # Create new key
-GET  /admin/keys/:id            # Get key details
-PUT  /admin/keys/:id            # Update key
-DELETE /admin/keys/:id          # Delete key
+# API Keys Management
+GET    /admin/keys
+POST   /admin/keys
+GET    /admin/keys/:id
+PUT    /admin/keys/:id
+DELETE /admin/keys/:id
 
-# Organizations
-GET  /admin/orgs                # List all orgs
-POST /admin/orgs                # Create new org
+# Organizations & Teams
+GET  /admin/orgs
+POST /admin/orgs
+GET  /admin/teams
+POST /admin/teams
 
-# Teams
-GET  /admin/teams               # List all teams
-POST /admin/teams               # Create new team
-
-# Logs & Stats
-GET  /admin/logs                # Request logs
-GET  /admin/stats               # Usage statistics
+# Analytics
+GET  /admin/logs
+GET  /admin/stats
 ```
 
-## Supported Providers
+---
 
-| Provider                    | Type              | Environment Prefix |
-| --------------------------- | ----------------- | ------------------ |
-| OpenAI                      | openai-compatible | `PRIMARY_`         |
-| Anthropic                   | anthropic         | `ANTHROPIC_`       |
-| Azure OpenAI                | azure             | `AZURE_`           |
-| Google AI                   | google            | `GOOGLE_`          |
-| Cohere                      | cohere            | `COHERE_`          |
-| Mistral                     | mistral           | `MISTRAL_`         |
-| Groq, Fireworks, Perplexity | openai-compatible | Custom             |
-| Ollama, LM Studio, vLLM     | openai-compatible | Custom             |
+## 🌍 Supported Providers
 
-**Any OpenAI-compatible API** works out of the box. Simply configure the base URL and API key.
+| Provider                      | Type                | Quick Config  |
+| ----------------------------- | ------------------- | ------------- |
+| OpenAI                        | `openai-compatible` | `PRIMARY_*`   |
+| Anthropic                     | `anthropic`         | `ANTHROPIC_*` |
+| Azure OpenAI                  | `azure`             | `AZURE_*`     |
+| Google AI                     | `google`            | `GOOGLE_*`    |
+| Cohere                        | `cohere`            | `COHERE_*`    |
+| Mistral                       | `mistral`           | `MISTRAL_*`   |
+| Groq / Fireworks / Perplexity | `openai-compatible` | Custom prefix |
+| Ollama / LM Studio / vLLM     | `openai-compatible` | Custom prefix |
 
-## Configuration
+> **Any OpenAI-compatible API** works out of the box.
 
-### Environment Variables
+---
 
-See `.env.example` for complete configuration options:
+## ⚙️ Configuration
 
 ```bash
-# Server
+# Server Settings
 SERVER_PORT=3000
 ADMIN_TOKEN=your-secure-admin-token
 
-# Primary Provider (e.g., OpenAI)
+# Primary Provider (OpenAI example)
 PRIMARY_TYPE=openai-compatible
 PRIMARY_API_KEY=sk-your-key
 PRIMARY_BASE_URL=https://api.openai.com/v1
@@ -179,184 +160,81 @@ PRIMARY_MODELS=gpt-4o,gpt-4o-mini,gpt-3.5-turbo
 PRIMARY_ENABLED=true
 PRIMARY_PRIORITY=10
 
-# Redis (for caching and rate limiting)
+# Fallback Provider (Anthropic example)
+FALLBACK_TYPE=anthropic
+FALLBACK_API_KEY=sk-ant-your-key
+FALLBACK_PRIORITY=20
+
+# Redis (enables caching & rate limiting)
 REDIS_URL=redis://localhost:6379
 REDIS_ENABLED=true
 
-# SSE Heartbeat (for streaming)
+# Streaming Heartbeat (keep connections alive)
 SSE_HEARTBEAT_INTERVAL_MS=15000
 
-# Semantic Cache (cost optimization)
+# Semantic Cache (reduce costs)
 SEMANTIC_CACHE_ENABLED=false
 SEMANTIC_CACHE_SIMILARITY_THRESHOLD=0.15
 ```
 
-### Multiple Providers
+---
 
-You can configure multiple providers with automatic failover:
+## 🏗️ Architecture
 
-```bash
-# Primary - OpenAI
-PRIMARY_TYPE=openai-compatible
-PRIMARY_API_KEY=sk-...
-PRIMARY_BASE_URL=https://api.openai.com/v1
-PRIMARY_PRIORITY=10
-
-# Fallback - Anthropic
-FALLBACK_TYPE=anthropic
-FALLBACK_API_KEY=sk-ant-...
-FALLBACK_PRIORITY=20
-
-# Local - Ollama
-OLLAMA_TYPE=openai-compatible
-OLLAMA_BASE_URL=http://localhost:11434/v1
-OLLAMA_PRIORITY=30
 ```
-
-## Architecture
+┌─────────────────────────────────────────────────────────────────┐
+│                        Your Application                          │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │ OpenAI / Anthropic API
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         LLM Gateway                              │
+│                                                                  │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐     │
+│  │  Tenant  │──▶│  Budget  │──▶│  Rate    │──▶│  Cache   │     │
+│  │   Auth   │   │   Check  │   │  Limit   │   │ (Redis)  │     │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘     │
+│        │                                                      │
+│        ▼                                                      │
+│  ┌─────────────────────────────────────┐                       │
+│  │       Provider Router               │                       │
+│  │   (Primary + Fallback + Failover)  │                       │
+│  └──────────────────┬──────────────────┘                       │
+│                     │                                          │
+│        ┌────────────┼────────────┐                             │
+│        ▼            ▼            ▼                             │
+│    ┌───────┐   ┌─────────┐   ┌───────┐                         │
+│    │OpenAI │   │Anthropic│   │ Azure │   ...100+ providers     │
+│    └───────┘   └─────────┘   └───────┘                         │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ### Request Flow
 
-1. **Tenant Auth** — Validate API key, extract org/team context
-2. **Budget Check** — Verify key hasn't exceeded spend limit
-3. **Rate Limit** — Check Redis-backed rate limit counter
-4. **Cache Lookup** — Check exact match, then semantic similarity
-5. **Provider Route** — Send to primary, automatic failover on error
-6. **Log & Track** — Record request, update spend counters, collect metrics
+1. **🔐 Tenant Auth** — Validate API key, extract org/team context
+2. **💰 Budget Check** — Verify key hasn't exceeded spend limit
+3. **🚦 Rate Limit** — Check Redis-backed rate limit counter
+4. **💾 Cache Lookup** — Exact match → Semantic similarity
+5. **🌐 Provider Route** — Primary → Fallback on error
+6. **📝 Log & Track** — Record request, update counters, collect metrics
 
-### Multi-Tenancy Model
+---
 
-```
-Organization
-└── Team
-    └── API Key
-        ├── Rate limit (requests/minute)
-        ├── Budget limit ($)
-        └── Model access whitelist
-```
+## 📊 Admin Dashboard
 
-### Caching Strategy
+Built-in React dashboard at `/admin`:
 
-**Exact Match Cache:**
+- 🔑 **API Keys** — Create, rotate, manage with spend limits
+- 🏢 **Organizations** — Multi-tenant hierarchy
+- 👥 **Teams** — Team-scoped resources
+- 🤖 **Models** — Provider model mappings
+- 📜 **Logs** — Real-time request streaming
+- 📈 **Stats** — Usage metrics per key/org
+- ❤️ **Health** — Provider status dashboard
 
-```
-llm-cache:org_123:team_456:<request_hash>
-```
+---
 
-**Semantic Cache:**
-Uses embedding similarity to match semantically equivalent requests, reducing costs by serving similar responses from cache.
-
-**Tenant Isolation:**
-
-- Cache keys include tenant context
-- Entry validation before returning data
-- Prevents cross-tenant data leakage
-
-## Admin Dashboard
-
-Built-in React dashboard accessible at `/admin`:
-
-- **API Keys** — Create, rotate, manage keys with spend limits
-- **Organizations** — Multi-tenant hierarchy management
-- **Teams** — Team-scoped resources and permissions
-- **Models** — Provider model mappings
-- **Logs** — Real-time request streaming
-- **Stats** — Usage metrics per key/org
-- **Health** — Provider health status dashboard
-
-## Development
-
-```bash
-# Install dependencies
-npm install
-
-# Development mode
-npm run dev          # Start gateway with hot reload
-npm run dev:admin    # Start admin UI with hot reload
-
-# Run tests
-npm test             # Run all tests
-npm run test:coverage # Run with coverage report
-
-# Code quality
-npm run lint         # Lint code
-npm run lint:fix     # Auto-fix lint issues
-npm run typecheck    # TypeScript type checking
-
-# Build
-npm run build        # Build gateway
-npm run build:admin  # Build admin UI
-```
-
-## Docker Deployment
-
-### Using Docker Compose
-
-```bash
-# Build and start all services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Stop and remove volumes
-docker-compose down -v
-```
-
-### Using Docker
-
-```bash
-# Build image
-docker build -t llm-gateway .
-
-# Run container
-docker run -d \
-  -p 3000:3000 \
-  -e PRIMARY_API_KEY=sk-your-key \
-  -e ADMIN_TOKEN=your-admin-token \
-  llm-gateway
-```
-
-## Health Monitoring
-
-### Health Endpoints
-
-```bash
-# Basic health check
-curl http://localhost:3000/health
-
-# Provider health status
-curl -H "Authorization: Bearer $ADMIN_TOKEN" \
-  http://localhost:3000/admin/health/providers
-```
-
-### Provider Health Response
-
-```json
-{
-  "providers": {
-    "primary": {
-      "status": "healthy",
-      "successRate": 98.5,
-      "avgLatency": 245,
-      "totalRequests": 1000
-    },
-    "fallback": {
-      "status": "degraded",
-      "successRate": 85.2,
-      "avgLatency": 1200,
-      "totalRequests": 150
-    }
-  }
-}
-```
-
-## SDKs & Client Libraries
-
-Install LLM Gateway client libraries in your preferred language:
+## 💻 SDKs & Client Libraries
 
 ### Python (pip)
 
@@ -375,9 +253,10 @@ response = gateway.chat.completions.create(
     model="gpt-4o",
     messages=[{"role": "user", "content": "Hello!"}]
 )
+print(response['choices'][0]['message']['content'])
 ```
 
-[Learn more →](python/README.md)
+[Python SDK →](python/README.md)
 
 ### Go
 
@@ -392,30 +271,24 @@ gateway := llmgateway.New(
     llmgateway.WithBaseURL("http://localhost:3000"),
     llmgateway.WithAPIKey("your-api-key"),
 )
+resp, _ := gateway.Chat.Completions.Create(ctx, &req)
 ```
 
-[Learn more →](go/README.md)
+[Go SDK →](go/README.md)
 
 ### Ruby (gem)
 
-```ruby
+```bash
 gem install llm-gateway
 ```
 
 ```ruby
 require 'llm_gateway'
-
-gateway = LLMGateway.new(
-  base_url: 'http://localhost:3000',
-  api_key: 'your-api-key'
-)
-response = gateway.chat.completions.create(
-  model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hello!' }]
-)
+gateway = LLMGateway.new(base_url: 'http://localhost:3000', api_key: 'your-key')
+response = gateway.chat.completions.create(model: 'gpt-4o', messages: [{role: 'user', content: 'Hello!'}])
 ```
 
-[Learn more →](ruby/README.md)
+[Ruby SDK →](ruby/README.md)
 
 ### npm / JavaScript
 
@@ -437,44 +310,122 @@ const response = await gateway.chat.completions.create({
 });
 ```
 
-## Tech Stack
+---
 
-- **Runtime:** Node.js 20+
-- **Framework:** Fastify
-- **Database:** SQLite with Drizzle ORM
-- **Cache:** Redis (optional, but recommended)
-- **Admin UI:** React + Vite + Tailwind CSS
-- **Testing:** Vitest
-- **Language:** TypeScript
+## 🐳 Deployment
 
-## Roadmap
+### Docker Compose (Recommended)
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+### Docker Standalone
+
+```bash
+# Build
+docker build -t llm-gateway .
+
+# Run
+docker run -d \
+  -p 3000:3000 \
+  -e PRIMARY_API_KEY=sk-your-key \
+  -e ADMIN_TOKEN=your-admin-token \
+  llm-gateway
+```
+
+---
+
+## 🛠️ Development
+
+```bash
+# Install dependencies
+npm install
+
+# Development with hot reload
+npm run dev          # Gateway
+npm run dev:admin    # Admin UI
+
+# Run tests
+npm test
+npm run test:coverage
+
+# Code quality
+npm run lint
+npm run typecheck
+
+# Build
+npm run build
+npm run build:admin
+```
+
+---
+
+## 🔧 Tech Stack
+
+| Component | Technology              |
+| --------- | ----------------------- |
+| Runtime   | Node.js 20+             |
+| Framework | Fastify                 |
+| Database  | SQLite + Drizzle ORM    |
+| Cache     | Redis                   |
+| Admin UI  | React + Vite + Tailwind |
+| Testing   | Vitest                  |
+| Language  | TypeScript              |
+
+---
+
+## 🗺️ Roadmap
 
 ### v1.0 (Current)
 
-- ✅ Multi-provider support
-- ✅ Tenant-isolated caching
+- ✅ Multi-provider support (100+)
+- ✅ Multi-tenant isolation
 - ✅ Budget enforcement
 - ✅ Rate limiting
 - ✅ Provider health tracking
-- ✅ Semantic cache
-- ✅ SSE heartbeat for streaming
+- ✅ Semantic caching
+- ✅ SSE heartbeat
 - ✅ Admin dashboard
 
-### v1.1 (Planned)
+### v1.1 (Next)
 
-- Routing strategies (load balancing, cost-based routing)
-- Circuit breaker per provider
-- Webhook notifications
-- Enhanced analytics
+- [ ] Advanced routing (load balancing, cost-based)
+- [ ] Circuit breaker per provider
+- [ ] Webhook notifications
+- [ ] Enhanced analytics
 
-## Contributing
+---
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+## 🤝 Contributing
 
-## License
+We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
 
-MIT License - see [LICENSE](LICENSE) for details.
+---
 
-## Acknowledgments
+## 📄 License
 
-Inspired by [LiteLLM](https://github.com/BerriAI/litellm) and built for teams who need enterprise-grade LLM gateway features.
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Inspired by [LiteLLM](https://github.com/BerriAI/litellm) — the best open-source LLM gateway.
+
+---
+
+<div align="center">
+
+**⭐ Star us on GitHub if this helped!**
+
+Built with ❤️ by [Dikshant Gajera](https://github.com/dikshantgajera)
+
+</div>
