@@ -31,90 +31,208 @@ curl http://localhost:3000/v1/chat/completions \
 
 ---
 
-## 📦 Use It Your Way
+## 📦 Use It Your Way — Install Anywhere
 
-### 🐳 Docker (Easiest)
+### 🐳 Docker (Recommended)
 
 ```bash
-# Quick start
-docker run -d -p 3000:3000 -e PRIMARY_API_KEY=sk-xxx bigllm/llm-gateway
+# Run instantly
+docker run -d -p 3000:3000 \
+  -e PRIMARY_API_KEY=sk-your-key \
+  -e ADMIN_TOKEN=your-admin-token \
+  bigllm/llm-gateway
+
+# Or with docker-compose
+git clone https://github.com/big-llm/llm-gateway.git
+cd llm-gateway
+cp .env.example .env
+# Edit .env with your API keys
+docker-compose up -d
 ```
+
+**Access:** API `http://localhost:3000` | Admin UI `http://localhost:5173`
 
 ### 🐍 Python
 
 ```bash
+# Install
 pip install llm-gateway
+
+# Use
+python
 ```
 
 ```python
 from llm_gateway import LLMGateway
-gateway = LLMGateway(base_url="http://localhost:3000", api_key="sk-xxx")
-response = gateway.chat.completions.create(model="gpt-4o", messages=[{"role":"user","content":"Hi"}])
+
+gateway = LLMGateway(
+    base_url="http://localhost:3000",
+    api_key="sk-your-key"
+)
+
+response = gateway.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+print(response['choices'][0]['message']['content'])
 ```
+
+[Python SDK →](python/README.md)
 
 ### 🟢 Go
 
 ```bash
+# Install
 go get github.com/big-llm/llm-gateway/go
 ```
 
 ```go
-gateway := llmgateway.New(llmgateway.WithAPIKey("sk-xxx"))
-resp, _ := gateway.Chat.Completions.Create(ctx, &req)
+package main
+
+import "github.com/big-llm/llm-gateway/go"
+
+func main() {
+    gateway := llmgateway.New(
+        llmgateway.WithBaseURL("http://localhost:3000"),
+        llmgateway.WithAPIKey("sk-your-key"),
+    )
+
+    resp, err := gateway.Chat.Completions.Create(ctx, &llmgateway.ChatCompletionRequest{
+        Model: "gpt-4o",
+        Messages: []llmgateway.Message{
+            {Role: "user", Content: "Hello!"},
+        },
+    })
+}
 ```
+
+[Go SDK →](go/README.md)
 
 ### 💎 Ruby
 
 ```bash
+# Install
 gem install llm-gateway
 ```
 
 ```ruby
-gateway = LLMGateway.new(base_url: 'http://localhost:3000', api_key: 'sk-xxx')
-response = gateway.chat.completions.create(model: 'gpt-4o', messages: [{role: 'user', content: 'Hi'}])
+require 'llm_gateway'
+
+gateway = LLMGateway.new(
+  base_url: 'http://localhost:3000',
+  api_key: 'sk-your-key'
+)
+
+response = gateway.chat.completions.create(
+  model: 'gpt-4o',
+  messages: [{ role: 'user', content: 'Hello!' }]
+)
+puts response['choices'][0]['message']['content']
 ```
 
-### 📦 npm / JavaScript
+[Ruby SDK →](ruby/README.md)
+
+### 📦 npm / JavaScript / TypeScript
 
 ```bash
+# Install
 npm install llm-gateway
+# or
+yarn add llm-gateway
+# or
+pnpm add llm-gateway
 ```
 
 ```javascript
 import { LLMGateway } from 'llm-gateway';
-const gateway = new LLMGateway({ baseUrl: 'http://localhost:3000', apiKey: 'sk-xxx' });
+
+const gateway = new LLMGateway({
+  baseUrl: 'http://localhost:3000',
+  apiKey: 'sk-your-key',
+});
+
 const response = await gateway.chat.completions.create({
   model: 'gpt-4o',
-  messages: [{ role: 'user', content: 'Hi' }],
+  messages: [{ role: 'user', content: 'Hello!' }],
 });
+
+console.log(response.choices[0].message.content);
 ```
 
 ### ☕ Java
 
+```xml
+<!-- Add to pom.xml -->
+<dependency>
+    <groupId>com.llm-gateway</groupId>
+    <artifactId>java-client</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ```java
-// Maven: com.llm-gateway:java-client:1.0.0
-LLMGateway gateway = new LLMGateway("http://localhost:3000", "sk-xxx");
+import com.llmgateway.*;
+
+LLMGateway gateway = new LLMGateway("http://localhost:3000", "sk-your-key");
+
+ChatCompletionRequest request = new ChatCompletionRequest()
+    .model("gpt-4o")
+    .messages(Arrays.asList(
+        new Message().role("user").content("Hello!")
+    ));
+
 CompletionsResponse response = gateway.chat().createCompletions(request);
 ```
 
 ### 🍎 C# / .NET
 
 ```bash
+# Install
 dotnet add package LLMGateway
 ```
 
 ```csharp
-var gateway = new LLMGatewayClient("http://localhost:3000", "sk-xxx");
+using LLMGateway;
+
+var gateway = new LLMGatewayClient("http://localhost:3000", "sk-your-key");
+
+var request = new ChatCompletionRequest
+{
+    Model = "gpt-4o",
+    Messages = new List<Message>
+    {
+        new Message { Role = "user", Content = "Hello!" }
+    }
+};
+
 var response = await gateway.Chat.CreateAsync(request);
+Console.WriteLine(response.Choices[0].Message.Content);
 ```
 
 ### ⬡ curl (No SDK needed)
 
 ```bash
+# Chat completions
 curl -X POST http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sk-xxx" \
-  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hi"}]}'
+  -H "Authorization: Bearer sk-your-key" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+
+# List models
+curl http://localhost:3000/v1/models \
+  -H "Authorization: Bearer sk-your-key"
+
+# Embeddings
+curl -X POST http://localhost:3000/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-your-key" \
+  -d '{
+    "model": "text-embedding-3-small",
+    "input": "Hello world"
+  }'
 ```
 
 ---
