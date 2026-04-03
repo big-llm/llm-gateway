@@ -35,22 +35,106 @@ curl http://localhost:3000/v1/chat/completions \
 
 ### 🐳 Docker (Recommended)
 
+#### Option 1: Quick Start (One command)
+
 ```bash
 # Run instantly
 docker run -d -p 3000:3000 \
   -e PRIMARY_API_KEY=sk-your-key \
   -e ADMIN_TOKEN=your-admin-token \
   bigllm/llm-gateway
+```
 
-# Or with docker-compose
+#### Option 2: Docker Compose (Full setup with Redis)
+
+```bash
+# Clone the repository
 git clone https://github.com/big-llm/llm-gateway.git
 cd llm-gateway
+
+# Create environment file
 cp .env.example .env
+
 # Edit .env with your API keys
+nano .env
+
+# Start all services (Gateway + Redis + Admin UI)
 docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+#### Option 3: Build from Source
+
+```bash
+# Clone and build
+git clone https://github.com/big-llm/llm-gateway.git
+cd llm-gateway
+
+# Build the image
+docker build -t llm-gateway .
+
+# Run the container
+docker run -d -p 3000:3000 \
+  -e PRIMARY_API_KEY=sk-your-key \
+  -e ADMIN_TOKEN=your-admin-token \
+  -v $(pwd)/data:/app/data \
+  llm-gateway
+```
+
+#### Option 4: Kubernetes
+
+```yaml
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: llm-gateway
+  template:
+    metadata:
+      labels:
+        app: llm-gateway
+    spec:
+      containers:
+        - name: gateway
+          image: bigllm/llm-gateway
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PRIMARY_API_KEY
+              value: 'sk-your-key'
+            - name: ADMIN_TOKEN
+              value: 'your-admin-token'
+            - name: REDIS_URL
+              value: 'redis://redis-service:6379'
+            - name: REDIS_ENABLED
+              value: 'true'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-gateway
+spec:
+  selector:
+    app: llm-gateway
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
 ```
 
 **Access:** API `http://localhost:3000` | Admin UI `http://localhost:5173`
+
+**Docker Hub:** https://hub.docker.com/r/bigllm/llm-gateway
 
 ### 🐍 Python
 
